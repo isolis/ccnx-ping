@@ -5,7 +5,6 @@ A very simple set of programs to consume and produce CCNx content objects
 
 Copyright 2015, Palo Alto Research Center Inc.
 
-Please see LICENSE file for license to this code
 
 
 Building
@@ -20,3 +19,9 @@ Contact
 ----
 
 You can find more information at the ccnx website: http://www.ccnx.org/
+
+
+License
+----
+
+This software is licensed under a BSD license. See LICENSE file.
