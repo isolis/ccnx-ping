@@ -1,4 +1,4 @@
-EXECUTABLES = helloWorld_Consumer helloWorld_ConsumerForever helloWorld_Producer
+EXECUTABLES = ccnx-ping ccnx-ping-server
 
 all: ${EXECUTABLES}
 
@@ -16,14 +16,11 @@ CFLAGS=${INCLUDE_DIR_FLAGS} ${LINK_DIR_FLAGS} ${CCNX_LIB_FLAGS} ${PARC_LIB_FLAGS
 
 CC=gcc -O2 -std=c99
 
-helloWorld_Consumer: helloWorld_Consumer.c config.h
-	${CC} helloWorld_Consumer.c ${CFLAGS} -o helloWorld_Consumer 
+ccnx-ping: ccnx-ping.c config.h
+	${CC} ccnx-ping.c ${CFLAGS} -o ccnx-ping 
 
-helloWorld_ConsumerForever: helloWorld_ConsumerForever.c config.h
-	${CC} helloWorld_ConsumerForever.c ${CFLAGS} -o helloWorld_ConsumerForever 
-
-helloWorld_Producer: helloWorld_Producer.c config.h
-	${CC} helloWorld_Producer.c ${CFLAGS} -o helloWorld_Producer 
+ccnx-ping-server: ccnx-ping-server.c config.h
+	${CC} ccnx-ping-server.c ${CFLAGS} -o ccnx-ping-server 
 
 clean:
 	rm -rf ${EXECUTABLES}

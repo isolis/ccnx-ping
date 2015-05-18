@@ -60,7 +60,7 @@ makePayload(void)
     time_t theTime = time(0);
 
     PARCBufferComposer *composer = parcBufferComposer_Create();
-    parcBufferComposer_Format(composer, "Hello World. The time is %s", ctime(&theTime));
+    parcBufferComposer_Format(composer, "Ping World. The time is %s", ctime(&theTime));
     PARCBuffer *payload = parcBufferComposer_ProduceBuffer(composer);
     parcBufferComposer_Release(&composer);
 
@@ -78,9 +78,9 @@ producer(void)
     
     assertNotNull(portal, "Expected a non-null CCNxPortal pointer.");
 
-    CCNxName *listenName = ccnxName_CreateFromURI("lci:/Hello");
-    CCNxName *goodbye = ccnxName_CreateFromURI("lci:/Hello/Goodbye%21");
-    CCNxName *contentName = ccnxName_CreateFromURI("lci:/Hello/World");
+    CCNxName *listenName = ccnxName_CreateFromURI("lci:/Ping");
+    CCNxName *goodbye = ccnxName_CreateFromURI("lci:/Ping/Goodbye%21");
+    CCNxName *contentName = ccnxName_CreateFromURI("lci:/Ping/World");
 
     if (ccnxPortal_Listen(portal, listenName)) {
         while (true) {

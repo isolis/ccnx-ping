@@ -65,31 +65,52 @@ consumer(void)
 
     assertNotNull(portal, "Expected a non-null CCNxPortal pointer.");
 
-    CCNxName *name = ccnxName_CreateFromURI("lci:/Hello/World");
+    CCNxName *name = ccnxName_CreateFromURI("lci:/Ping/World");
 
     CCNxInterest *interest = ccnxInterest_CreateSimple(name);
     ccnxName_Release(&name);
 
     CCNxMetaMessage *message = ccnxMetaMessage_CreateFromInterest(interest);
-    
-    if (ccnxPortal_Send(portal, message)) {
-        while (ccnxPortal_IsError(portal) == false) {
-            CCNxMetaMessage *response = ccnxPortal_Receive(portal);
-            if (response != NULL) {
-                if (ccnxMetaMessage_IsContentObject(response)) {
-                    CCNxContentObject *contentObject = ccnxMetaMessage_GetContentObject(response);
 
-                    PARCBuffer *payload = ccnxContentObject_GetPayload(contentObject);
+    struct timeval send_time;
+    struct timeval receive_time;
+	int ret;
 
-                    char *string = parcBuffer_ToString(payload);
-                    printf("%s\n", string);
-                    parcMemory_Deallocate((void **)&string);
+	long latency       = 0;
+	long total_latency = 0;
+	long iterations    = 0;
 
-                    break;
-                }
-            }
-            ccnxMetaMessage_Release(&response);
-        }
+
+	while(true){
+	  gettimeofday(&send_time, NULL);
+	  if (ccnxPortal_Send(portal, message)) {
+		  while (ccnxPortal_IsError(portal) == false) {
+			  CCNxMetaMessage *response = ccnxPortal_Receive(portal);
+			  gettimeofday(&receive_time, NULL);
+			  if (response != NULL) {
+				  if (ccnxMetaMessage_IsContentObject(response)) {
+					  CCNxContentObject *contentObject = ccnxMetaMessage_GetContentObject(response);
+
+					  latency = 
+						  (receive_time.tv_sec - send_time.tv_sec)*1000000 +
+						  (receive_time.tv_usec - send_time.tv_usec);
+					  total_latency = total_latency + latency;
+			          iterations = iterations + 1;
+					  printf("%6lu us  (%6lu us avg)\n", latency, total_latency/iterations);
+						  
+					  //PARCBuffer *payload = ccnxContentObject_GetPayload(contentObject);
+
+					  //char *string = parcBuffer_ToString(payload);
+					  //printf("%s\n", string);
+					  //parcMemory_Deallocate((void **)&string);
+
+					  break;
+				  }
+			  }
+			  ccnxMetaMessage_Release(&response);
+		  }
+	  }
+	  sleep(1);
     }
 
     ccnxPortal_Release(&portal);
