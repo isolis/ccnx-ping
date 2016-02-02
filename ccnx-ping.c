@@ -10,6 +10,7 @@
  * @copyright 2014-2015 Palo Alto Research Center, Inc. (PARC), A Xerox Company. All Rights Reserved.
  */
 #include <config.h>
+#include <unistd.h>
 #include <stdio.h>
 
 #include <LongBow/runtime.h>
@@ -61,7 +62,7 @@ consumer(void)
     
     CCNxPortalFactory *factory = setupConsumerFactory();
    
-    CCNxPortal *portal = ccnxPortalFactory_CreatePortal(factory, ccnxPortalRTA_Message, &ccnxPortalAttributes_Blocking);
+    CCNxPortal *portal = ccnxPortalFactory_CreatePortal(factory, ccnxPortalRTA_Message);
 
     assertNotNull(portal, "Expected a non-null CCNxPortal pointer.");
 
@@ -83,9 +84,9 @@ consumer(void)
 
 	while(true){
 	  gettimeofday(&send_time, NULL);
-	  if (ccnxPortal_Send(portal, message)) {
+	  if (ccnxPortal_Send(portal, message,CCNxStackTimeout_Never)) {
 		  while (ccnxPortal_IsError(portal) == false) {
-			  CCNxMetaMessage *response = ccnxPortal_Receive(portal);
+			  CCNxMetaMessage *response = ccnxPortal_Receive(portal,CCNxStackTimeout_Never);
 			  gettimeofday(&receive_time, NULL);
 			  if (response != NULL) {
 				  if (ccnxMetaMessage_IsContentObject(response)) {

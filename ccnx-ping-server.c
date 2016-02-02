@@ -10,6 +10,7 @@
  * @copyright 2014-2015 Palo Alto Research Center, Inc. (PARC), A Xerox Company. All Rights Reserved.
  */
 #include <config.h>
+#include <stdio.h>
 #include <LongBow/runtime.h>
 
 #include <time.h>
@@ -74,7 +75,7 @@ producer(void)
 
     CCNxPortalFactory *factory = setupPortalFactory();
 
-    CCNxPortal *portal = ccnxPortalFactory_CreatePortal(factory, ccnxPortalRTA_Message, &ccnxPortalAttributes_Blocking);
+    CCNxPortal *portal = ccnxPortalFactory_CreatePortal(factory, ccnxPortalRTA_Message);
     
     assertNotNull(portal, "Expected a non-null CCNxPortal pointer.");
 
@@ -82,9 +83,9 @@ producer(void)
     CCNxName *goodbye = ccnxName_CreateFromURI("lci:/Ping/Goodbye%21");
     CCNxName *contentName = ccnxName_CreateFromURI("lci:/Ping/World");
 
-    if (ccnxPortal_Listen(portal, listenName)) {
+    if (ccnxPortal_Listen(portal, listenName,60 * 60 * 24 * 365,CCNxStackTimeout_Never)) {
         while (true) {
-            CCNxMetaMessage *request = ccnxPortal_Receive(portal);
+            CCNxMetaMessage *request = ccnxPortal_Receive(portal,CCNxStackTimeout_Never);
 
             if (request == NULL) {
                 break;
@@ -103,7 +104,7 @@ producer(void)
 
                     CCNxMetaMessage *message = ccnxMetaMessage_CreateFromContentObject(contentObject);
 
-                    if (ccnxPortal_Send(portal, message) == false) {
+                    if (ccnxPortal_Send(portal, message, CCNxStackTimeout_Never) == false) {
                         fprintf(stderr, "ccnxPortal_Send failed: %d\n", ccnxPortal_GetError(portal));
                     }
 

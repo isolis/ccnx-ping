@@ -4,17 +4,22 @@ CCNx Simple Ping
 This is a trivial ping based on the Hello World.   It is just a simple example,
 it is not meant to be complete or correct.
 
-Copyright 2015, Palo Alto Research Center Inc.
+Copyright 2015,2016 Palo Alto Research Center Inc.
 
 
 
 Building
 -----
 
-This code assumes an Ubuntu 14.04 with the CCNx binary distribution installed.
-It is meant to show a simple example of a makefile and the libraries required
-to build a simple piece of software.
+This code assumes an Ubuntu 14.04 with CCNx installed.  It is meant to show a
+simple example of a makefile and the libraries required to build a simple piece
+of software.
 
+You will need to set the location of the CCNx libraries by setting the
+`CCNX_HOME` environemnt variable. If needed, the `LIBEVENT_HOME` environment
+variable can be set to point to where Libevent has been installed.
+
+To compile, type make.
 
 Running
 ----
